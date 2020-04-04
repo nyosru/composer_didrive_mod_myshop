@@ -1,0 +1,105 @@
+<input type="hidden" id="shop_id" value="{$shop.id}" />
+
+
+<div class="row up_line">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-left">
+
+        {* форма поиска *} 
+        {if 1 == 2 }
+            <form action="" method="get" class="search_form">
+                <div class="input-group">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-search" ></span></span>
+                    <input type="text" name="search" value="" class="form-control">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Искать</button>
+                    </span>
+                </div>
+                <!-- /input-group -->
+            </form>
+        {/if}
+
+    </div>
+    <!-- /.col-lg-6 -->
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right">
+
+        {*if isset($smarty.get.option) && $smarty.get.option != 'cart' }
+        <div class="cart_body">
+
+        <span class="cart_icon glyphicon glyphicon-shopping-cart"></span>
+        <a id="cart_kolvo_items" href="/{$smarty.get['level']}/cart/"></a>
+        <span id="cart_price" class="cart_price"></span>
+
+        </div>
+        {/if *}
+
+    </div>
+</div>
+
+
+
+{*f\pa($shop)*} {* карточка заказа *} 
+
+{if isset($smarty.get.option) && $smarty.get.option == 'cart' } {include file="./sh.cart.htm" } 
+
+    {* выбран 1 каталог с товарами*} 
+{else if isset($smarty.get.ext1) && is_numeric($smarty.get.ext1) && isset( $shop.cats[$smarty.get.ext1] ) }
+
+    <span>
+        <h3>{$shop.cats[$smarty.get.ext1]['name']}</h3>
+
+        <div class="row">
+
+            {*f\pa($shop.cats)*}
+
+            {if isset($shop.cats[$smarty.get.ext1]['down'])}
+                <div class="hidden-xs col-sm-5 col-md-4 col-lg-3 myshop_catalogs2">
+                    {foreach $shop.cats[$smarty.get.ext1]['down'] as $k => $v }
+                        <a href="/{$smarty.get['level']}/cat/{$k}/">{$shop.cats[$k]['name']}</a>
+                    {/foreach}
+                </div>
+            {/if}
+
+            {if isset($shop.items) }
+                {$n = 1}
+                {foreach $shop.items as $k1 => $v1 }
+                    {*$v1.cat*}
+
+                    {if $v1.cat == $smarty.get.ext1 || isset($v.down[$v1.cat]) }
+                        {*f\pa($v1)*}
+
+                        {include file="./sh.item.mini.htm" }
+
+                        {$n = $n+1}
+                    {/if}
+
+                {/foreach}
+            {/if}
+        </div>
+
+
+
+    </span> 
+
+    {* смотрим магазин, не выбрали ничего *} 
+{else} {* <h3>Каталоги и товары</h3> *}
+
+    {foreach $shop.cats as $k => $v } {*f\pa($v)*} {if $v.up_id == '' && isset($v['items-kolvo']) }
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 inlist_head_cat text-center">
+                        <h2 id="myshop_cat_{$k}">{$v.name}</h2>
+                    </div>
+                </div>
+
+                <div class="row">
+                    {foreach $shop.items as $k1 => $v1 } 
+                        {if $v1.cat == $k || $v1.cat == $v.up_id || isset($v.down[$v1.cat]) } 
+                            {*f\pa($v1)*} 
+                            {include file="./sh.item.mini.htm" } 
+                        {/if} 
+                    {/foreach}
+                </div>
+
+            {/if}
+        {/foreach} 
+        {/if}

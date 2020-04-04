@@ -1,0 +1,86 @@
+{strip}
+<h2>Каталоги интернет магазина</h2>
+
+{$cats = Nyos\mod\Myshop::getCats($db, $shop.id)}
+{*f\pa($cats,2)*}
+
+<button onclick="$(this).hide('slow');$('#add_cat6541654').show('slow');" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить каталог</button>
+
+<a href="?level={$smarty.get.level}&option={$smarty.get.option}{if isset($smarty.get.ext1)}&ext1={$smarty.get.ext1}{/if}&rand={rand(1,3000)}" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Обновить страницу</a>
+
+<br/>
+<br/>
+
+<div id='add_cat6541654' style="display:none; padding: 10px; margin: 10px; background-color:rgba(50,150,200,0.05);" >
+    <form action="" method="post" >
+        <h3>Добавить каталог</h3>
+
+
+        Каталог родитель
+        <select name="up_id" class="form-control">
+
+            <option value="" >- - -</option>
+
+            {foreach $cats as $k => $v }
+
+            {if $v.status == 'del' } {continue} {/if}
+
+            {if $v.up_id === null }
+            <option value="{$v.id}" >{if $v.status == 'hide' }(скрыт){/if} {$v.name}</option>
+            {/if}
+
+            {/foreach}
+        </select>
+
+        <Br/>
+        Название каталога <input class="form-control" type="text" name="name" value="" />
+        <Br/>
+        <Br/>
+        <input type="submit" name="new_cat" value="Добавить каталог" />
+        <input type="hidden" name="shop" value="{$shop.id}" />
+        <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret($shop.id)}" />
+    </form>
+</div>
+
+<p class="bg-warning" style="padding:15px;" >
+    <b>Сортировка</b> от большего к меньшему
+    <br/>
+    <b>Редактирование названия</b> возможно если кликнитеп по нему мышкой (зелёная рамка говорит о том что изменения сохранены)
+    <br/>
+    <b>Значения сортировки сохранено</b> когда у поля зелёный контур (каталоги выстроятся в новом порядке после обновления страницы)
+</p>
+
+<table class="table table-striped">
+    
+    <thead>
+        <tr>
+            <th width='15px'>#</th>
+            <th width='15px'>сорти-ровка</th>
+            <th colspan="2">Название</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+
+    {*f\pa($cats,2)*}
+    
+    <tbody>
+    {foreach $cats as $k => $v }
+        {if !isset($v.up_id) || ( isset($v.up_id)&& $v.up_id == '' ) }
+        
+        {$item = $v}
+        {include file="./body.cats.item.htm" }
+
+            {foreach $cats as $k1 => $v1 }
+
+            {if $v1.up_id !== $v.id || $v1.status == 'del' } {continue} {/if}
+
+            {$item = $v1}
+            {include file="./body.cats.item.htm" }
+
+            {/foreach}
+        {/if}
+    {/foreach}
+    </tbody>
+    
+</table>
+{/strip}

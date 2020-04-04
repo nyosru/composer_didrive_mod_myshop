@@ -1,0 +1,69 @@
+{strip}
+
+<tr>
+    <td>{$item.id}</td>
+    <td>
+        <input type='number' max='99' min='1'
+               class="edit_pole"
+               table="m_myshop_cats"
+               name='sort'
+               rev="{$item.id}"
+               s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-sort-`$item.id`")}'
+               value='{$item.sort}' style="width:50px;" />
+    </td>
+    <td colspan="2">
+
+        {if $item.up_id|count_characters:true > 0 } &rarr; {/if}
+
+        <span onclick="$(this).hide();$('#name_pole{$item.id}').show('slow');">{$item.name}</span>
+        <input type='text' style="display:none;" class='edit_pole form-control'
+
+               id='name_pole{$item.id}'
+
+               class="edit_pole"
+               table="m_myshop_cats"
+               rev="{$item.id}"
+               name="name"
+               value="{$item.name|escape}"
+
+               s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-name-`$item.id`")}'
+               /></span>
+</td>
+<td>
+    {*
+    <a href="" class="btn btn-xs btn-info" >скрыть</a>
+    <a href="" class="btn btn-xs btn-success" >показать</a>
+    <a href="?level={$smarty.get['level']}&option={$smarty.get.option}&delete_cat={$k}&s={\Nyos\nyos::creatSecret($k)}"
+       class="btn btn-xs btn-danger" >удалить</a>
+    *}
+
+    <a href="" class="save_edit_a btn btn-xs btn-danger"
+
+       table="m_myshop_cats"
+       rev="{$item.id}"
+       pole='status'
+       value='del'
+
+       s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_cats-status-`$item.id`-del")}'
+
+       job='status_e_{$item.id}'
+       ok='res_{$item.id}'
+       error='res_error_{$item.id}'
+
+       >Удалить</a>
+
+    <span id='status_e_{$item.id}' style='display:none' ><img src="/img/load.gif" ></span>
+    <span id='res_{$item.id}' style='display:none' >Удалено успешно</span>
+    <span id='res_error_{$item.id}' style='display:none' ></span>
+
+    {*
+    <a href="" xonclick="$('option_{$item.id}').toggle('slow');return false;" 
+       id_cat="{$item.id}" secret='{Nyos\nyos::creatSecret("show_admin_option_cat`$item.id`")}'
+       div_to_res="option_{$item.id}" show_div="da"
+       class="btn btn-xs btn-info show_admin_option_cat">Параметры товаров</a>
+    <div id="option_{$item.id}" style="display:none;" ></div>
+    *}
+    
+</td>
+</tr>
+{/strip}

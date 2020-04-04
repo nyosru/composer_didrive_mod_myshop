@@ -1,0 +1,215 @@
+<h2>Каталоги интернет магазина</h2>
+
+{$cats = Nyos\mod\myshop::getCats($db, $shop.id)}
+{*f\pa($cats,2)*}
+
+
+
+<button onclick="$(this).hide('slow');$('#add_cat6541654').show('slow');" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить каталог</button>
+
+<a href="?level={$smarty.get.level}&option={$smarty.get.option}{if isset($smarty.get.ext1)}&ext1={$smarty.get.ext1}{/if}&rand={rand(1,3000)}" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Обновить страницу</a>
+
+<br/>
+<br/>
+
+<div id='add_cat6541654' style="display:none; padding: 10px; margin: 10px; background-color:rgba(50,150,200,0.05);" >
+    <form action="" method="post" >
+        <h3>Добавить каталог</h3>
+{*
+        Каталог родитель
+        <select name="up_id" class="form-control">
+
+            <option value="" >- - -</option>
+
+            {foreach $cats as $k => $v }
+
+            {if $v.status == 'del' }
+            {continue}
+            {/if}
+
+            {if isset($v.up_id) && $v.up_id == ''}
+            <option value="{$v.id}" >{if $v.status == 'hide' }(скрыт){/if} {$v.name}</option>
+            {/if}
+
+            {/foreach}
+        </select>
+*}
+        <Br/>
+        Название каталога <input class="form-control" type="text" name="name" value="" />
+        <Br/>
+        <Br/>
+        <input type="submit" name="new_cat" value="Добавить каталог" />
+        <input type="hidden" name="shop" value="{$shop.id}" />
+        <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret($shop.id)}" />
+    </form>
+</div>
+
+<p class="bg-warning" style="padding:15px;" >
+    <b>Сортировка</b> от большего к меньшему
+    <br/>
+    <b>Редактирование названия</b> возможно если кликнитеп по нему мышкой (зелёная рамка говорит о том что изменения сохранены)
+    <br/>
+    <b>Значения сортировки сохранено</b> когда у поля зелёный контур (каталоги выстроятся в новом порядке после обновления страницы)
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table class="table table-responsive">
+
+    <thead>
+        <tr>
+            <th width='15px'>#</th>
+            <th width='15px'>сорти-ровка</th>
+            <th colspan="2">Название</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+
+    {*f\pa($cats,2)*}
+
+    {foreach $cats as $k => $v }
+    {if !isset($v.up_id) || ( isset($v.up_id)&& $v.up_id == '' ) }
+
+    <tr>
+        <td>{$k}</td>
+        <td>
+            <input type='number' max='99' min='1'
+                class="edit_pole"
+                table="m_myshop_cats"
+                name='sort'
+                rev="{$k}"
+                s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-sort-`$k`")}'
+                value='{$v.sort}' style="width:50px;" />
+            </td>
+            <td colspan="2">
+            <span onclick="$(this).hide();$('#name_pole{$k}').show('slow');">{$v.name}</span>
+            <input type='text' style="display:none;" class='edit_pole form-control'
+
+                id='name_pole{$k}'
+
+                class="edit_pole"
+                table="m_myshop_cats"
+                rev="{$k}"
+                name="name"
+                value="{$v.name|escape}"
+
+                s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-name-`$k`")}'
+                /></span>
+        </td>
+        <td>
+            {*
+            <a href="" class="btn btn-xs btn-info" >скрыть</a>
+            <a href="" class="btn btn-xs btn-success" >показать</a>
+            <a href="?level={$smarty.get['level']}&option={$smarty.get.option}&delete_cat={$k}&s={\Nyos\nyos::creatSecret($k)}"
+                class="btn btn-xs btn-danger" >удалить</a>
+            *}
+
+                            <a href="" class="save_edit_a btn btn-xs btn-danger"
+
+                               table="m_myshop_cats"
+                               rev="{$k}"
+                               pole='status'
+                               value='del'
+
+                               s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_cats-status-`$k`-del")}'
+
+                               job='status_e_{$k}'
+                               ok='res_{$k}'
+                               error='res_error_{$k}'
+
+                               >Удалить</a>
+
+                        <span id='status_e_{$k}' style='display:none' ><img src="/img/load.gif" ></span>
+                        <span id='res_{$k}' style='display:none' >Удалено успешно</span>
+                        <span id='res_error_{$k}' style='display:none' >2222222</span>
+                        
+                        <a href="" xonclick="$('option_{$k}').toggle('slow');return false;" 
+                           id_cat="{$k}" secret='{Nyos\nyos::creatSecret("show_admin_option_cat`$k`")}'
+                           div_to_res="option_{$k}" show_div="da"
+                           class="btn btn-xs btn-info show_admin_option_cat">Параметры товаров</a>
+                        
+                        <div id="option_{$k}" style="display:none;" ></div>
+
+        </td>
+    </tr>
+
+    {foreach $cats as $k1 => $v1 }
+
+    {if $v1.up_id != $k || $v1.status == 'del' }
+    {continue}
+    {/if}
+
+    <tr>
+        <td>
+            <input type='number' max='99' min='1'
+                class="edit_pole"
+                table="m_myshop_cats"
+                name='sort'
+                rev="{$k1}"
+                s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-sort-`$k1`")}'
+                value='{$v1.sort}' style="width:50px;" />
+        </td>
+        <td style="width:20px;"> &rarr; </td>
+        <td>
+            <span onclick="$(this).hide();$('#name_pole{$k1}').show('slow');">{$v1.name}</span>
+            <span><input type='text' style="display:none;"
+                id='name_pole{$k1}' class='edit_pole form-control'
+
+
+                class="edit_pole"
+                table="m_myshop_cats"
+                rev="{$k1}"
+                name="name"
+                value="{$v1.name|escape}"
+
+                s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-name-`$k1`")}'
+
+                /></span>
+        </td>
+        <td>
+            {*
+            <a href="" class="btn btn-xs btn-info" >скрыть</a>
+            <a href="" class="btn btn-xs btn-success" >показать</a>
+            <a href="/index.php?level={$level}&option={$smarty.get.option}&ext1={$smarty.get.ext1}&delete_cat={$k1}&s={\Nyos\nyos::creatSecret($k1)}"
+               onclick="return confirm('Хотите удалить Каталог (так же будут удалены каталоги потомки и товары в них находящиеся)');" class="btn btn-xs btn-danger" >удалить</a>
+            *}
+                            <a href="" class="save_edit_a btn btn-xs btn-danger"
+
+                               table="m_myshop_cats"
+                               rev="{$k1}"
+                               pole='status'
+                               value='del'
+
+                               s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_cats-status-`$k1`-del")}'
+
+                               job='status_e_{$k1}'
+                               ok='res_{$k1}'
+                               error='res_error_{$k1}'
+
+                               >Удалить</a>
+
+                        <span id='status_e_{$k1}' style='display:none' ><img src="/img/load.gif" ></span>
+                        <span id='res_{$k1}' style='display:none' >Удалено успешно</span>
+                        <span id='res_error_{$k1}' style='display:none' >2222222</span>
+        </td>
+    </tr>
+
+    {/foreach}
+    {/if}
+    {/foreach}
+</table>

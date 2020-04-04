@@ -1,0 +1,453 @@
+{strip}
+
+<h2>Настройки интернет магазина</h2>
+
+
+
+{* $cats = Nyos\mod\myshop::getCats($db, $shop.id) *}
+{*f\pa($cats,2)*}
+
+{*f\pa($shop)*}
+
+{*
+{if !isset($smarty.get.cat) }
+{foreach $cats as $k => $v }
+{$e = $smarty.get}
+{$e.cat = $k}
+{\f\redirect( '/', 'i.didrive.php', $e)}
+{break}
+{/foreach}
+{/if}
+*}
+
+{*f\pa($shop,2)*}
+
+<div class="container-fluid" >
+    <div class="row" >
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2" >
+
+            {*f\pa($myshop_dop,2)*}
+
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Значение</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {foreach $myshop_dop as $k => $v }
+
+                    {*
+                    <tr>
+                        <td colspan='2' >{$k}</td>
+                    </tr>
+                    *}
+
+                    {if isset($v.type) && $v.type == 'cat' }
+                    <tr>
+                        <td class="alert-success" colspan='2' ><b>{$v.head}</b></td>
+                    </tr>
+                    {else if isset($v.name) && isset($v.type) && $v.type == 'select' }
+                    <tr>
+
+                        <td>{$v.name}</td>
+                        <td>
+
+                            <select class="form-control replace_save_select2" 
+                                    table="m_myshop_dop" 
+                                    pole="var" 
+                                    k1="id_shop" v1="{$shop.id}"
+                                    k2="name" v2="{$k}"
+                                    >
+                                <option value="" s='{Nyos\nyos::creatSecret("replace_save_select2-m_myshop_dop-id_shop-`$shop.id`-name-`$k`-var-")}' >выберите</option>
+                                {foreach $v.value as $a1 => $a2}
+                                <option value="{$a1}" s='{Nyos\nyos::creatSecret("replace_save_select2-m_myshop_dop-id_shop-`$shop.id`-name-`$k`-var-`$a1`")}' 
+                                        {if isset($shop.dop[$k]) && $shop.dop[$k] == $a1}selected="selected"{/if}
+                                        >{$a2}</option>
+                                {/foreach}
+                            </select>
+                            <small>
+                                {if isset($v.comment) }{$v.comment}<br/>{/if}
+                                {if isset($v['value-default']) }по умолчанию = {$v['value-default']}<br/>{/if}
+                            </small>
+                        </td>
+                    </tr>
+                    
+                    
+                    
+                    {else if isset($v.name) && isset($v.type) && $v.type == 'file' }
+                    
+                    
+                    
+                    <tr>
+
+                        <td>{$v.name}
+                            {if isset($shop.dop[$k])}<br/><center><a href="{$sd}shop_files/{$shop.dop[$k]|escape}" target="_blank"  ><img src="{$sd}shop_files/{$shop.dop[$k]|escape}" alt="изображение" border="" style="border: 2px dotted orange; max-width: 150px; max-height: 150px;" /></a>{/if}
+                            </td>
+                        <td>
+                            <form enctype="multipart/form-data" method="post" >
+                                
+                                <div class="input-group">
+                                    <input type=file name="file" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit" name="save_file" value="save" >загрузить</button>
+                                    </span>
+                                </div>
+
+                                <input type=hidden name="table" value="m_myshop_dop" />
+                                <input type=hidden name="pole" value="var" />
+                                <input type=hidden name="k1" value="id_shop"  />
+                                <input type=hidden name="v1" value="{$shop.id}"  />
+                                <input type=hidden name="k2" value="name"  />
+                                <input type=hidden name="v2" value="{$k}" />
+
+                            </form>
+                            {if isset($v.comment) }<small>{$v.comment}</small>{/if}
+
+                            {*
+                            {$k}
+                            <br/>
+                            {$shop.dop[$k]}
+                            <br/>
+                            *}
+                            
+                        </td>
+                    </tr>
+                    
+                    
+                    {else if isset($v.name) }
+                    
+                    
+                    <tr>
+
+                        <td>{$v.name}</td>
+                        <td>
+
+                            <input type='string' class="form-control replace_input2" 
+
+                                   act="replace_pole2"
+                                   table="m_myshop_dop"
+
+                                   k1="id_shop"
+                                   v1="{$shop.id}"
+
+                                   k2="name"
+                                   v2="{$k}"
+
+                                   name="var" 
+                                   value="{if isset($shop.dop[$k])}{$shop.dop[$k]|escape}{/if}" 
+
+                                   s='{Nyos\nyos::creatSecret( "replace_pole2-m_myshop_dop-id_shop-`$shop.id`-name-`$k`-var" )}'
+
+                                   />
+                            {if isset($v.comment) }<small>{$v.comment}</small>{/if}
+
+                        </td>
+                    </tr>
+                    {/if}
+
+                    {/foreach}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+{/strip}
+
+
+
+{if 1 == 2 }            
+{$ah = $smarty.get}
+<span class="list_cats">
+    {foreach $cats as $k => $v }
+
+    {if $v.status == 'del' }
+    {continue}
+    {/if}
+
+    {if $v.up_id == ''}
+    {$ah.cat = $k}
+    {$ah.tovar = ''}
+    {$ah.ext1 = ''}
+    <a href="?{http_build_query($ah)}" {if isset($smarty.get.cat) && $smarty.get.cat == $k }{$now_cat = $k}class="active"{/if}>{if $v.status == 'hide' }(скрыт){/if} {$v.name}</a>
+
+
+    {foreach $cats as $k1 => $v1 }
+
+    {if $v1.status == 'del' }
+    {continue}
+    {/if}
+
+    {if $v1.up_id == $k}
+    {$ah.cat = $k1}
+    {$ah.tovar = ''}
+    {$ah.ext1 = ''}
+    <a href="?{http_build_query($ah)}" style="padding-left:10%;" {if isset($smarty.get.cat) && $smarty.get.cat == $k1 }{$now_cat = $k1}class="active"{/if}> >> {if $v1.status == 'hide' }(скрыт){/if} {$v1.name}</a>
+    {/if}
+
+    {/foreach}
+
+
+
+    {/if}
+
+    {/foreach}
+</span>
+<br/>
+<br/>
+
+<a href="?level=000.index&option=cats" class="btn btn-default">управление каталогами</a>
+
+</div>
+
+<div class="col-xs-6 col-sm-7 col-md-8 col-lg-9" >
+
+    <h3>Товары</h3>
+
+    {if !isset($now_cat) }
+
+    < < < Выберите каталог < < <
+
+    {else}
+
+
+
+
+    <button onclick="$(this).hide('slow');$('#add_item6541654').show('slow');" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить 1 товар</button>
+
+    {*
+    <button onclick="$(this).hide('slow');$('#add_cat6541654').show('slow');" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить каталог</button>
+    *}
+
+    &nbsp;
+
+    {$e = $smarty.get}
+    {$e.rand = 651}
+    <a href="?{http_build_query($e)}" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Обновить страницу</a>
+    <br/>
+    <br/>
+
+    <div id='add_item6541654' style="display:none; padding: 10px; margin: 10px; background-color:rgba(50,150,200,0.05);" >
+        <form action="" enctype="multipart/form-data" method="post" >
+            <h3>Добавить товар</h3>
+
+            <div class="row">
+                <div class="col-xs-6 col-md-6 col-sm-6 col-lg-6">
+                    <p>Каталог: <u>{$cats[$smarty.get.cat]['name']}</u></p>
+                    <input type='hidden' name="cat" value="{$smarty.get.cat}" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Название</label>
+                        <div class="col-sm-10">
+                            <input type="text" name='name' class="form-control" id="inputEmail3" placeholder="Название">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row" style='margin-top:10px;'>
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Цена</label>
+                        <div class="col-sm-4">
+
+                            <div class="input-group">
+                                <span class="input-group-addon">руб</span>
+                                <input type="text" name='price' class="form-control">
+                                <span class="input-group-addon">.00</span>
+                            </div>
+
+                        </div>
+
+                        <label for="inputEmail3" class="col-sm-2 control-label">Старая цена </label>
+                        <div class="col-sm-4">
+
+                            <div class="input-group">
+                                <span class="input-group-addon">руб</span>
+                                <input type="text" name='price_old' class="form-control">
+                                <span class="input-group-addon">.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-md-6 col-sm-4 col-lg-4">
+                    <b>Фото</b> <input type="file" name="f[]" />
+                </div>
+                <div class="col-xs-6 col-md-6 col-sm-4 col-lg-4">
+                    <b>Фото</b> <input type="file" name="f[]" />
+                </div>
+                <div class="col-xs-6 col-md-6 col-sm-4 col-lg-4">
+                    <b>Фото</b> <input type="file" name="f[]" />
+                </div>
+                <div class="col-xs-6 col-md-6 col-sm-4 col-lg-4">
+                    <b>Фото</b> <input type="file" name="f[]" />
+                </div>
+                <div class="col-xs-6 col-md-6 col-sm-4 col-lg-4">
+                    <b>Фото</b> <input type="file" name="f[]" />
+                </div>
+                <div class="col-xs-6 col-md-6 col-sm-4 col-lg-4">
+                    <b>Фото</b> <input type="file" name="f[]" />
+                </div>
+                <div class="col-xs-6 col-md-6 col-sm-4 col-lg-4">
+                    <b>Фото</b> <input type="file" name="f[]" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+                    <b>Описание</b>
+                    <textarea id='i_1' name="opis" class="form-control" ></textarea>
+
+                    {if !isset($wfwcwsdv)}
+                    {$wfwcwsdv = 1}
+                    <script type="text/javascript" charset="utf-8" src="/js/ckeditor.4.5.11/ckeditor.js"></script>
+                    {/if}
+
+                    {literal}
+                    <script type="text/javascript" charset="utf-8">
+        CKEDITOR.replace("i_1");
+                    </script>
+                    {/literal}
+                </div>
+            </div>
+
+
+
+            <Br/>
+            <Br/>
+            <input type="submit" name="new_item2" value="Добавить товар" />
+            <input type="hidden" name="new_item" value="Добавить товар" />
+            <input type="hidden" name="shop" value="{$shop.id}" />
+            <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret($shop.id)}" />
+        </form>
+    </div>
+
+
+
+
+    {$items = Nyos\mod\myshop::getItems($db, $shop.id)}
+    {*f\pa($items)*}
+
+
+
+
+    <table class="table table-hover">
+
+        <thead>
+            <tr>
+                <th width='15px'>сорти-ровка</th>
+                <th colspan="2">Название</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {foreach $items as $k11 => $v11 }
+
+            {if $v11.status == 'del' || $v11.cat != $now_cat }
+            {continue}
+            {/if}
+
+            <tr class="items" >
+                <td><span><input type='number' max='99' min='1'
+
+                                 class="edit_pole"
+                                 table="m_myshop_items"
+                                 name='sort'
+                                 rev="{$k11}"
+                                 s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-sort-`$k11`")}'
+                                 value="{$v11.sort}"
+
+                                 style="width:50px;" /></span></td>
+
+                <td colspan="2">
+                    <span onclick="$(this).hide();$('#name_pole{$k11}').show('slow');">{$v11.name}</span>
+                    <span><input type='text' style="display:none;" value="{$v11.name|escape}"
+
+                                 id='name_pole{$k11}' {* class='edit_pole form-control'
+                                 rel="{$k11}" name="name" alt="m_myshop_items" s='{Nyos\nyos::creatSecret("`$k11`namem_myshop_items")}' *}
+
+                                 class="edit_pole"
+                                 table="m_myshop_items"
+                                 rev="{$k11}"
+                                 name="name"
+                                 value="{$v.name|escape}"
+
+                                 s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_items-name-`$k11`")}'
+
+                                 /></span>
+                </td>
+                <td>
+
+                    <a href="" class="save_edit_a btn btn-xs btn-danger"
+
+                       table="m_myshop_items"
+                       rev="{$k11}"
+                       pole='status'
+                       value='del'
+
+                       s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_items-status-`$k11`-del")}' 
+
+                       job='status_e_{$k11}'
+                       ok='res_{$k11}'
+                       error='res_error_{$k11}'
+
+                       >Удалить товар</a>                            
+
+                    <span id='status_e_{$k11}' style='display:none' ><img src="/img/load.gif" ></span>
+                    <span id='res_{$k11}' style='display:none' >Удалено успешно</span>
+                    <span id='res_error_{$k11}' style='display:none' >2222222</span>               
+
+
+                    <br/>
+                    <br/>
+
+                    {foreach $v11.imgs as $k => $v }
+
+                    {*
+                    <img src="{$sd}myshop_items_img/{$v}" class="ms_di_img_mini" />
+                    111
+                    <img src="/nyos-image/80/250/myshop_items_img/{$v}"  />
+                    222
+                    *}
+                    <img src="/sys.image.jpg.php?redir=yes&q=80&w=250&uri=/myshop_items_img/{$v}" class="ms_di_img_mini" alt="" />
+
+                    {/foreach}
+
+                    {*f\pa($v11,2)*}
+
+                    {*
+                    <a href="" class="btn btn-xs btn-info" >скрыть</a>
+                    <a href="" class="btn btn-xs btn-success" >показать</a>
+                    *}
+                    {*
+                    <a href="/index.php?level={$smarty.get.level}&option={$smarty.get.option}&ext1={$smarty.get.ext1}&delete_cat={$k}&s={\Nyos\nyos::creatSecret($k)}"
+                       onclick="return confirm('Хотите удалить Каталог (так же будут удалены каталоги потомки и товары в них находящиеся)');" class="btn btn-xs btn-danger" >удалить</a>
+                    *}
+                </td>
+            </tr>
+
+
+            {/foreach}
+        </tbody>
+    </table>
+
+    {/if}
+
+</div>
+</div>
+</div>
+{/if}

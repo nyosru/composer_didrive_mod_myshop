@@ -1,0 +1,218 @@
+{strip}
+<table class="table" >
+    <thead>
+
+        <tr>
+            <th width='50'>сорти-ровка</th>
+            <th>Параметр</th>
+            <th>Значения</th>
+        </tr>
+
+    </thead>
+    <tbody>
+
+        {$item_old = array()}
+
+        {foreach $items as $k => $v }
+
+        {if isset($item_old[$v.option_id]) }{continue}{/if}
+        {$item_old[$v.option_id] = 1}
+
+        <tr>
+            <td >
+            <input type='number' max='99' min='1'
+                class="edit_pole"
+                table="m_myshop_cats_option"
+                name='sort'
+                rev="{$k}"
+                s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats_option-sort-`$k`")}'
+                value='{$v.opt_sort}' style="width:50px;" />
+            </td>
+            <td class="cat_option_items" >
+                
+                {if $v.opt_status == 'delete'}<strike>{/if}
+                {$v.name}
+                {if $v.opt_status == 'delete'}</strike>  (будет удалено в 01:07)
+
+                    {* восстановить если удалено *}
+                    <span class='block-recovery'>
+                        <a href="" class="save_edit_a act btn btn-xs btn-info"
+
+                           table="m_myshop_cats_option"
+                           rev="{$k}"
+                           pole='status'
+                           value='ok'
+
+                           s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_cats_option-status-`$k`-ok")}'
+
+                           job='status_e_{$k}'
+                           ok='res_{$k}'
+                           error='res_error_{$k}'
+
+                           >Восстановить</a>
+
+                        <span id='status_e_{$k}' style='display:none' ><img src="/img/load.gif" ></span>
+                        <span id='res_{$k}' style='display:none' >= восстановлено =</span>
+                        <span id='res_error_{$k}' style='display:none' >2222222</span>
+                    </span>                
+
+
+    
+                {else}
+                    <span class='block-red'>
+                        <a href="" class="save_edit_a act btn btn-xs btn-danger"
+
+                           table="m_myshop_cats_option"
+                           rev="{$k}"
+                           pole='status'
+                           value='delete'
+
+                           s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_cats_option-status-`$k`-delete")}'
+
+                           job='status_e_{$k}'
+                           ok='res_{$k}'
+                           error='res_error_{$k}'
+
+                           >Удалить</a>
+
+                        <span id='status_e_{$k}' style='display:none' ><img src="/img/load.gif" ></span>
+                        <span id='res_{$k}' style='display:none' >Удалено успешно</span>
+                        <span id='res_error_{$k}' style='display:none' >2222222</span>
+                    </span>
+                {/if}
+            </td>
+            <td>
+
+                {*f\pa($v)*}
+
+                {*
+                <input type="checkbox" > Красный
+                <br/>
+                <input type="checkbox" > Перламутровый
+                <br/>
+                <input type="checkbox" > Сиреневый
+                *}
+
+                {foreach $items as $k1 => $v1 }
+                {if $v1.option_id != $v.option_id }{continue}{/if}
+                <div class="cat_option_items">
+                    {*
+                    <input type="checkbox" > 
+                    *}
+
+                    {if $v1.status == 'delete'}<strike>{/if}
+                        {$v1.var}
+                        {if $v1.status == 'delete'}</strike> (будет удалено в 01:07)
+                    {* восстановить если удалено *}
+                    <span class='block-recovery'>
+                        <a href="" class="save_edit_a act btn btn-xs btn-info"
+
+                           table="m_myshop_cats_option_var"
+                           rev="{$k1}"
+                           pole='status'
+                           value='ok'
+
+                           s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_cats_option_var-status-`$k1`-ok")}'
+
+                           job='status_e_{$k1}'
+                           ok='res_{$k1}'
+                           error='res_error_{$k1}'
+
+                           >Восстановить</a>
+
+                        <span id='status_e_{$k1}' style='display:none' ><img src="/img/load.gif" ></span>
+                        <span id='res_{$k1}' style='display:none' >= восстановлено =</span>
+                        <span id='res_error_{$k1}' style='display:none' >2222222</span>
+                    </span>                
+                    {else}
+                    {* удалить если не удалено *}
+                    <span class='block-red'>
+                        <a href="" class="save_edit_a act btn btn-xs btn-danger"
+
+                           table="m_myshop_cats_option_var"
+                           rev="{$k1}"
+                           pole='status'
+                           value='delete'
+
+                           s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_cats_option_var-status-`$k1`-delete")}'
+
+                           job='status_e_{$k1}'
+                           ok='res_{$k1}'
+                           error='res_error_{$k1}'
+
+                           >Удалить</a>
+
+                        <span id='status_e_{$k1}' style='display:none' ><img src="/img/load.gif" ></span>
+                        <span id='res_{$k1}' style='display:none' >Удалено успешно</span>
+                        <span id='res_error_{$k1}' style='display:none' >2222222</span>
+                    </span>
+                    {/if}
+
+                </div>
+                {/foreach}
+            </td>
+        </tr>
+        {/foreach}
+
+    </tbody>
+</table>
+
+
+{$s = 1|rand:999}
+<a href='' onclick="$('#s{$s}').show('slow');$(this).hide();return false;" class='btn btn-success' >Добавить новый параметр для товаров текущего каталога</a>
+
+<span id="s{$s}" style='display:none;'>
+
+<h3 class="bg-black-5 padding5" >Добавить новый параметр для товаров текущего каталога</h3>
+
+<form class="form-horizontal add_cat_options" role="form" method="POST" 
+      action="" x-onsubmit="addCatOption(this);return false;" 
+      div_for_load="div_for_load654"
+      res_div="{$res_div}" res_key="{$res_key}" res_s="{$res_s}"
+      >
+
+    <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">Параметр
+            <br/><small style="color:#ababab;">Например:<br/>Размер</small>
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="opt_name">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail3" class="col-sm-2 control-label">Дать выбор
+            <br/><small style="color:#ababab;">Например:<br/>выбор Размера</small>
+        </label>
+        <div class="col-sm-10">
+            <input type="checkbox" name="hand_select" value="yes" > Дать возможность выбрать пользователю один из введённых вами параметров
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Значения
+            <br/><small style="color:#ababab;">Например:<br/>S<br/>M<br/>L<br/>XL<br/>XXL</small>
+        </label>
+        <div class="col-sm-10">
+
+            <textarea class="form-control" name="opt_vars" rows="5" ></textarea>
+            <small>каждое значение на новой строке</small>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+
+            <button type="submit" class="btn btn-success">Добавить</button>
+
+            <span id="div_for_load654"></span>
+
+            <input type="hidden" name="action" value="add_cat_options" />
+            <input type="hidden" name="id" value="{$cat}" />
+            <input type="hidden" name="s" value="{Nyos\nyos::creatSecret("add_cat_options`$cat`")}" />
+
+        </div>
+    </div>
+
+</form>
+</span>
+
+{/strip}

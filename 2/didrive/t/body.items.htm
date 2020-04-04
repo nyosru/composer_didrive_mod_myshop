@@ -1,0 +1,250 @@
+{strip}
+
+<h2>Каталоги интернет магазина</h2>
+
+{$cats = Nyos\mod\myshop::getCats($db, $shop.id)}
+{*f\pa($cats,2)*}
+
+{if !isset($smarty.get.cat) }
+{foreach $cats as $k => $v }
+{$e = $smarty.get}
+{$e.cat = $k}
+{\f\redirect( '/', 'i.didrive.php', $e)}
+{break}
+{/foreach}
+{/if}
+
+<div class="container-fluid" >
+    <div class="row" >
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 list_cats" >
+
+            {foreach $cats as $k => $v }
+
+            {if $v.up_id == ''}
+
+            {$g = $smarty.get}
+            {$g.cat = $k}
+            {$g.tovar = ''}
+            {$g.ext1 = ''}
+
+            <a href="/i.didrive.php?{http_build_query($g)}" 
+               {if isset($smarty.get.cat) && $smarty.get.cat == $k }{$now_cat = $k}class="active"{/if}
+               >
+               {$v.name}
+               {if $v.status == 'hide' } (скрыт){/if} </a>
+
+            {$t = 1}
+
+            {foreach $cats as $k1 => $v1 }
+
+            {if $v1.up_id == $v.id}
+
+            {if $t == 1 }<blockquote>{$t = 2}{/if}
+
+                {$g = $smarty.get}
+                {$g.cat = $k1}
+                {$g.tovar = ''}
+                {$g.ext1 = ''}
+                <a href="?{http_build_query($g)}" style="padding-left:10%;" {if isset($smarty.get.cat) && $smarty.get.cat == $k1 }{$now_cat = $k1}class="active"{/if} >
+                   >> {$v1.name}
+                   {if $v1.status == 'hide' } (скрыт){/if}                
+            </a>
+
+            {/if}
+
+            {/foreach}
+
+            {if $t == 2 }</blockquote>{/if}
+
+        {/if}
+
+        {/foreach}
+        <br/>
+        <br/>
+        <a href="?level=000.index&option=cats" class="btn btn-default btn-xs">управление каталогами</a>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9 col-xl-9" >
+
+
+
+
+        <h3>Товары</h3>
+
+        <div class="alert-warning" style="padding:10px;" >
+            <small>
+                <b>Сортировка</b> От большего к меньшему
+            </small>
+        </div>
+
+
+        {$items = Nyos\mod\myshop::getItems($db, $shop.id)}
+        {*f\pa($items)*}
+        {if $items === false }
+        
+        <br/>
+        <p>нет товаров, добавте первый!</p>
+        
+        {else}
+        
+        есть товары
+        
+        {/if}
+
+
+
+
+
+
+        {if 1 == 2 }
+
+
+
+        {if !isset($now_cat) }
+
+        < < < Выберите каталог < < <
+
+        {else}
+
+        <button onclick="$(this).hide('slow');$('#add_item6541654').show('slow');" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить 1 товар</button>
+
+        {*
+        <button onclick="$(this).hide('slow');$('#add_cat6541654').show('slow');" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить каталог</button>
+        *}
+
+        &nbsp;
+
+        {$e = $smarty.get}
+        {$e.rand = 651}
+
+        <a href="?{http_build_query($e)}" class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> Обновить страницу</a>
+
+        <br/>
+        <br/>
+
+        <div id='add_item6541654' style="display:none; padding: 10px; margin: 10px; background-color:rgba(50,150,200,0.05);" >
+            {include file="./body.items.add.htm"}
+        </div>
+
+
+
+
+        {$items = Nyos\mod\myshop::getItems($db, $shop.id)}
+        {*f\pa($items)*}
+
+
+
+
+        <table class="table table-hover">
+
+            <thead>
+                <tr>
+                    <th width='15px'>сорти-ровка</th>
+                    <th colspan="2">Название</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {foreach $items as $k11 => $v11 }
+
+                {if $v11.status == 'del' || $v11.cat != $now_cat }
+                {continue}
+                {/if}
+
+                <tr class="items" >
+                    <td><span><input type='number' max='99' min='1'
+
+                                     class="edit_pole"
+                                     table="m_myshop_items"
+                                     name='sort'
+                                     rev="{$k11}"
+                                     s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_cats-sort-`$k11`")}'
+                                     value="{$v11.sort}"
+
+                                     style="width:50px;" /></span></td>
+
+                    <td colspan="2">
+                        <span onclick="$(this).hide();$('#name_pole{$k11}').show('slow');">{$v11.name}</span>
+                        <span><input type='text' style="display:none;" value="{$v11.name|escape}"
+
+                                     id='name_pole{$k11}' {* class='edit_pole form-control'
+                                     rel="{$k11}" name="name" alt="m_myshop_items" s='{Nyos\nyos::creatSecret("`$k11`namem_myshop_items")}' *}
+
+                                     class="edit_pole"
+                                     table="m_myshop_items"
+                                     rev="{$k11}"
+                                     name="name"
+                                     value="{$v.name|escape}"
+
+                                     s='{Nyos\nyos::creatSecret("edit_pole-m_myshop_items-name-`$k11`")}'
+
+                                     /></span>
+                    </td>
+                    <td>
+
+                        <a href="" class="save_edit_a btn btn-xs btn-danger"
+
+                           table="m_myshop_items"
+                           rev="{$k11}"
+                           pole='status'
+                           value='del'
+
+                           s='{Nyos\nyos::creatSecret("save_edit_a-m_myshop_items-status-`$k11`-del")}' 
+
+                           job='status_e_{$k11}'
+                           ok='res_{$k11}'
+                           error='res_error_{$k11}'
+
+                           >Удалить товар</a>                            
+
+                        <button class="btn btn-xs btn-info" onclick="$('#photo_{$k11}').toggle('slow');return false;">Фотки</button>
+
+                        <span id='status_e_{$k11}' style='display:none' ><img src="/img/load.gif" ></span>
+                        <span id='res_{$k11}' style='display:none' >Удалено успешно</span>
+                        <span id='res_error_{$k11}' style='display:none' >2222222</span>               
+
+
+
+
+                        <div id="photo_{$k11}" style="display:none;">
+                            {foreach $v11.imgs as $k => $v }
+
+                            {*
+                            <img src="{$sd}myshop_items_img/{$v}" class="ms_di_img_mini" />
+                            111
+                            <img src="/nyos-image/80/250/myshop_items_img/{$v}"  />
+                            222
+                            *}
+                            <img src="/sys.image.jpg.php?redir=yes&q=80&w=250&uri=/myshop_items_img/{$v}" class="ms_di_img_mini" alt="" />
+
+                            {/foreach}
+                        </div>
+
+                        {*f\pa($v11,2)*}
+
+                        {*
+                        <a href="" class="btn btn-xs btn-info" >скрыть</a>
+                        <a href="" class="btn btn-xs btn-success" >показать</a>
+                        *}
+                        {*
+                        <a href="/index.php?level={$smarty.get.level}&option={$smarty.get.option}&ext1={$smarty.get.ext1}&delete_cat={$k}&s={\Nyos\nyos::creatSecret($k)}"
+                           onclick="return confirm('Хотите удалить Каталог (так же будут удалены каталоги потомки и товары в них находящиеся)');" class="btn btn-xs btn-danger" >удалить</a>
+                        *}
+                    </td>
+                </tr>
+
+
+                {/foreach}
+            </tbody>
+        </table>
+
+        {/if}
+
+        {/if}
+
+    </div>
+</div>
+</div>
+
+{/strip}

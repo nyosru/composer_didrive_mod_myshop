@@ -1,0 +1,23 @@
+<!-- {strip} -->
+
+<div class="container-fluid" >
+    <div class="grid">
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="btn-toolbar" role="toolbar" >
+                {foreach $menu01 as $k22 => $v22 }
+                <a href="?level={$smarty.request.level}&option={$k22}" class="btn {if isset($smarty.get.option) && $k22 == $smarty.get.option }btn-success{else}btn-default{/if} " >{$v22.name}</a>
+                {/foreach}
+                </div>
+            </div>
+        </div>
+        
+        {if isset($smarty.get.option) && isset($menu01[$smarty.get.option]) }
+        {include file="`$smarty.const.didr_tpl`body.`$smarty.get.option`.htm"}
+        {/if}
+        
+    </div>
+</div>
+<!-- {/strip} -->
+

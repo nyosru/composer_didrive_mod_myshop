@@ -1,0 +1,89 @@
+<!-- {strip} -->
+{* без каталогов *}
+
+<form id="form_order2" action="" method="post">
+
+
+<div id="form_order" class="form_top" >
+    <div>
+        <div id="form_order2" class="fixed_bottom">
+            <div id="form_ok" >
+                
+            </div>
+            <div class="row" id="form_new">
+                
+                <div class="col-xs-6 col-md-4 col-sm-4 col-lg-3"><input placeholder="Как Вас зовут" name="fio" id="fio" class="form-control" type="text" required /></div>
+                <div class="col-xs-6 col-md-4 col-sm-4 col-lg-3"><input placeholder="Телефон" name="phone" id="phone" class="form-control" type="text" required /></div>
+                <div class="col-xs-6 col-md-4 col-sm-4 col-lg-2 text-center">Сумма&nbsp;заявки <b><span id="fin_itog">0</span>р</span></b>
+                    <input type="hidden" id="finsumm30" value="0" />
+                    <input type="hidden" name="id" value="{$now_mod.shop_id}" />
+                    <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret($now_mod.shop_id)}" />
+                </div>
+                <div class="col-xs-6 col-md-4 col-sm-4 col-lg-2 text-center "><span id="ok_but_stat" ></span><input id="ok_but" class="btn btn-success" name="suba" value="Отправить" style="display:none" type="submit" /></div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class='list_mag_ok' style="display:none;" >
+        <br/>
+        <br/>
+        <br/>
+        <center>
+        <h3>
+        Заявка отправлена, спасибо!
+        <br/>
+        <br/>
+        В ближайшее время ( с 10:00 - 18:00 ) позвоним
+        </h3>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+            </center>
+    </div>
+
+{$items = Nyos\mod\myshop::getItems($db, $now_mod['shop_id'], 'no-cat' )}
+
+<div class='list_mag' >
+    {foreach $items as $k => $v }
+
+    <div class='row item'>
+        <div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 name'>
+            <b>{$v.name}</b> ( {$v.opis} )
+
+            {if isset($v.ed_izm) && $v.ed_izm|count_characters:true > 0 }
+            <span class="ed_iz" >{$v.ed_izm}</span>
+            {/if}
+
+        </div>
+        <div class='col-xs-6 col-sm-2 col-md-2 col-lg-2 price text-right'>
+
+            {$v.price}р
+            <input type="hidden" id="summ{$k}" value="{$v.price}" />
+
+        </div>
+        <div class='col-xs-6 col-sm-3 col-md-3 col-lg-2 but_bay'>
+
+            <nobr>
+                <span rel="{$k}" rev="{$v.price}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
+                <input value="0" id="kolvo{$k}" class="kolvo" type="text"> 
+                <input name="item[{$k}][kolvo]" value="0" id="kolvo2_{$k}" id="kolvo2" type="hidden" />
+                <span rel="{$k}" rev="{$v.price}" alt="10000" class="plus2 btn btn-xs btn-success" value="+">+</span>
+                <input xname="item[{$k}][summa]" value="0" class="summa_cifra" id="summa{$k}" type="hidden">
+                <span class="summa" id="summa_show{$k}"></span>
+            </nobr>
+        </div>
+    </div>
+    {/foreach}
+</div>
+
+</form>
+
+
+{*f\pa($items,2)*}
+
+<script src="/js/numberformat.js"></script>
+
+<!-- {/strip} -->

@@ -1,0 +1,121 @@
+{$items = Nyos\mod\myshop::getItems( $db, $shop.id )}
+
+{*f\pa($items,2)*}
+
+{*
+// cart_price
+
+$sum = 0;
+
+foreach( $_SESSION['on_cart'] as $k => $v ){
+if( isset($items[$k]['price']) )
+$sum += ceil($v * $items[$k]['price']);
+}
+*}
+
+
+<div class="container-fluid cart">
+
+    <form action="" method="post" id="cart_big_form" >
+
+        <div class="row">
+
+
+            <div class="col-xs-12 col-sm-7 col-md-8 col-lg-9">
+                <h3>Корзина</h3>
+
+                <div id="order_new" class="container-fluid list_in_cats">
+
+                    {if isset($smarty.session.on_cart) }
+                    {foreach $smarty.session.on_cart as $k => $v }
+
+                    {if isset($items[$k]) }
+                    {$v1 = $items[$k]}
+                    <div class="row" id="item_tr_{$k}">
+
+                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+
+                            {if isset($smarty.session.on_cart) && $smarty.session.on_cart|@sizeof == 1 }
+                            <span style="display:none;" >
+                                {/if}
+                                <input type="checkbox" class="cart_check_my_items" name="item_select[{$k}]" rel="{$k}" id="my_cart{$k}" value="{$k}" onchange="refreshCart({$shop.id});" checked />
+                                {if isset($smarty.session.on_cart) && $smarty.session.on_cart|@sizeof == 1 }
+                            </span>
+                            {/if}
+
+                        </div>
+
+                        <div class="col-xs-11 col-sm-3 col-md-3 col-lg-6">
+                            {if isset($v1['imgs'][0]) }<img src='{$sd}myshop_items_img/{$v1['imgs'][0]}' alt='' border='' />{/if}
+                                                            <b>{$items[$k]['name']}</b>
+                        </div>
+
+                        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            <input type="number" class="kolvo2 carts_kolvo" rel="{$k}" id="kolvo_{$k}" name="kolvo[{$k}]" value="{$v}" />
+                            <input type="hidden" id="price_{$k}" value="{$v1.price}" />
+                        </div>
+
+                        <div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+                            <span id="summa_item_{$k}" >{$v1.price*$v} Р</span>
+                            <a href="" class="remove_item_from_cart" rel="{$k}" hide="di_bu_ok_{$k}" show="di_bu_{$k}"  ><span class="glyphicon glyphicon-remove-circle"></span></a>
+                        </div>
+
+                    </div>
+                    {/if}
+                    {/foreach}
+                    {/if}
+
+                </div>
+
+
+                <div id="order_okey" class='order_okey' style="display:none;">
+                </div>
+
+                {*f\pa($shop)*}
+
+            </div>
+
+            <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
+                <div id="creat_order1" class="order_div">
+
+                    <h3>Оформление заказа</h3>
+
+                    <p>К&nbsp;оплате:<nobr><span id="summ_for_pay" >.........</span></nobr></p>
+
+                    <Br/>
+
+                    <input type="text" name="fio" class="form-control" value="" placeholder="ФИО*" required />
+                    
+                    {*
+                    [form_cart_mail] => show
+                    [form_cart_tel] => net
+                    [form_cart_adres] => ob
+                    *}
+
+                    {if !isset($shop['dop']['form_cart_tel']) || ( isset($shop.dop['form_cart_tel']) && $shop.dop['form_cart_tel'] != 'net' ) }
+                    <input type="text" name="phone" class="form-control" value="" placeholder="Телефон{if isset($shop['dop']['form_cart_tel']) && $shop['dop']['form_cart_tel'] == 'ob' }*{/if}" {if isset($shop['dop']['form_cart_tel']) && $shop['dop']['form_cart_tel'] == 'ob' }required{/if} />
+                           {/if}
+
+                    {if !isset($shop['dop']['form_cart_mail']) || ( isset($shop.dop['form_cart_mail']) && $shop.dop['form_cart_mail'] != 'net' ) }
+                    <input type="email" name="mail" value="" class="form-control" placeholder="E-mail{if isset($shop['dop']['form_cart_mail']) && $shop['dop']['form_cart_tel'] == 'ob' }*{/if}" {if isset($shop['dop']['form_cart_tel']) && $shop['dop']['form_cart_mail'] == 'ob' }required{/if} />
+                    {/if}
+
+                    {if !isset($shop['dop']['form_cart_adres']) || ( isset($shop.dop['form_cart_adres']) && $shop.dop['form_cart_adres'] != 'net' ) }
+                    <textarea name="adres" placeholder="Адрес доставки{if isset($shop['dop']['form_cart_adres']) && $shop['dop']['form_cart_adres'] == 'ob' }*{/if}" class="form-control" {if isset($shop['dop']['form_cart_adres']) && $shop['dop']['form_cart_adres'] == 'ob' }required{/if} ></textarea>
+                    {/if}
+
+                    <input type="hidden" name="send_order" value="y" />
+                    <input type="hidden" name="shop" value="{$shop.id}" />
+
+                    <center>
+                        <input type="submit" name="send" value="Оформить заказ" class="btn btn-success" />
+                    </center>
+
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+</div>
+
