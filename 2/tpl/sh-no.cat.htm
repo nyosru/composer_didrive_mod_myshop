@@ -1,406 +1,534 @@
-<!-- {strip} -->
+{% spaceless %}
+    {#
+    <!-- {strip} -->
+    
+    {* без каталогов *}
+    
+    {*
+    f\pa($inf)}
+    {f\pa($smarty.session.now_user) 
+    *}
+    
+    
+    
+    {if isset($smarty.session.now_user.now_price) }
+    {$now_price = $smarty.session.now_user.now_price}
+    {else}
+    {$now_price = 0}
+    {/if}
+    
+    {*
+    <h3>{$now_price}</h3>
+    *}
+    
+    #}
 
-{* без каталогов *}
+    {%  set now_price = session.now_user.now_price ?? 0 %}
+    {# now price : {{ now_price }} #}
 
-{*
-f\pa($inf)}
-{f\pa($smarty.session.now_user) 
-*}
+    <div class='container' >
+        <div class='row' >
+            <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center' >
 
-{if isset($smarty.session.now_user.now_price) }
-{$now_price = $smarty.session.now_user.now_price}
-{else}
-{$now_price = 0}
-{/if}
+                {#            {/strip} #}
+                <span style='background-color: yellow;padding:10px 20px;font-weight: bold; display:inline-block; margin: 10px 0;' >
 
-{*
-<h3>{$now_price}</h3>
-*}
+                    {% if now_price == 2 %}
+                        Производится расчёт цены для пайщиков-сотрудников, спасибо что Вы с нами!
 
-<div class='container' >
-    <div class='row' >
-        <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center' >
-            
-            {/strip}
-            <span style='background-color: yellow;padding:10px 20px;font-weight: bold; display:inline-block; margin: 10px 0;' >
+                    {% elseif now_price == 1 %}
+                        Производится расчёт цены для пайщиков-потребителей, спасибо что Вы с нами!
 
-                {if $now_price == 2 }
-                Производится расчёт цены для пайщиков-сотрудников, спасибо что Вы с нами!
+                    {% else %}
+                        <a href="/000.about/">Как стать пайщиком ?</a>
 
-                {elseif $now_price == 1 }
-                Производится расчёт цены для пайщиков-потребителей, спасибо что Вы с нами!
+                        {#
+                        {*
+                        <span>
+                            {if !isset($smarty.SESSION.now_user.id) }
+                            и <a href="" data-toggle="modal" data-target="#modal-enter"  >пройти авторизацию</a>
+                            {/if}
+                        </span>
+                        *}
+                        #}
 
-                {else}
-                <a href="/000.about/">Как стать пайщиком ?</a>
+                    {% endif %}
 
-                {*
-                <span>
-                    {if !isset($smarty.SESSION.now_user.id) }
-                    и <a href="" data-toggle="modal" data-target="#modal-enter"  >пройти авторизацию</a>
-                    {/if}
                 </span>
-                *}
 
-                {/if}
-            </span>
-            {strip}
-        </div>
-    </div>
-</div>
-
-
-
-<form id="form_order2" action="" method="post">
-    <div id="form_order" class="form_top" >
-        <div>
-            <div id="form_order2" class="xfixed_bottom">
-                <div id="form_ok" >
-
-                </div>
-                <div class="row" id="form_new">
-
-                    <div class="col-xs-6 col-md-4 col-sm-4 col-lg-3"><input placeholder="Как Вас зовут" name="fio" id="fio" class="form-control" 
-                        value="{if isset($smarty.session.now_user.name) }{$smarty.session.now_user.name}{/strip} {strip}{/if}
-                        {if isset($smarty.session.now_user.family) }{$smarty.session.now_user.family}{/if}
-                        "
-                        type="text" required /></div>
-                    <div class="col-xs-6 col-md-4 col-sm-4 col-lg-3"><input placeholder="Телефон" name="phone" id="phone" {if isset($smarty.session.now_user.phone) && $smarty.session.now_user.phone|count_characters:true > 0  } {/strip} {strip} value="{$smarty.session.now_user.phone}" {/strip} {strip}{/if} class="form-control" type="text" required /></div>
-                    <div class="col-xs-6 col-md-4 col-sm-4 col-lg-2 text-center">Сумма&nbsp;заявки <b><span id="fin_itog">0</span>р</span></b>
-                        <input type="hidden" id="finsumm30" value="0" />
-                        <input type="hidden" name="user_type" value="{if $now_price == 2 }сотрудник{else if $now_price == 1 }пайщик{else}гость{/if}" />
-  
-{*
-                        {$rr = 1|rand:99999}
-                        <input type="hidden" name="id" value="{$rr}" />
-                        <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret($rr)}" />
-*}                        
-                        
-                        <input type="hidden" name="id" value="{Nyos\mod\myshop::$shop.id}" />
-                        <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret(Nyos\mod\myshop::$shop.id)}" />
-                    </div>
-                    <div class="col-xs-6 col-md-4 col-sm-4 col-lg-2 text-center "><span id="ok_but_stat" ></span><input id="ok_but" class="btn btn-success" name="suba" value="Отправить" style="display:none" type="submit" /></div>
-
-                </div>
             </div>
         </div>
     </div>
 
-    <div class='list_mag_ok' style="display:none;" >
 
-        <br/>
-        <br/>
-        <br/>
 
-        <center>
 
-            <h3>
-                Заявка отправлена, спасибо!
+    {#{ pa(datain) }#}
+
+
+
+
+    <form id="form_order2" action="" method="post">
+        <div id="form_order" class="form_top" >
+            <div>
+                <div id="form_order2" class="xfixed_bottom">
+                    <div id="form_ok" >
+
+                    </div>
+                    <div class="row" id="form_new">
+
+                        <div class="col-xs-6 col-md-4 col-sm-4 col-lg-3">
+                            <input 
+                                name="fio" 
+                                id="fio" 
+                                placeholder="Как Вас зовут" 
+                                class="form-control" 
+                                value="{% if session.now_user.name is defined and session.now_user.name|length > 0 %}{{ session.now_user.name|e }} {% endif %}{% if session.now_user.family is defined and session.now_user.family|length > 0 %}{{ session.now_user.family|e }} {% endif %}"
+                                type="text" required 
+                                />
+                        </div>
+
+                        <div class="col-xs-6 col-md-4 col-sm-4 col-lg-3">
+                            <input 
+                                placeholder="Телефон" 
+                                name="phone" 
+                                id="phone" 
+
+                                {% if session.now_user.phone is defined and session.now_user.phone|length > 0 %}
+                                    value='{{ session.now_user.phone|escape('html') }}'
+                                {% endif %}
+
+                                class="form-control" 
+                                type="text" 
+                                required 
+                                />
+                        </div>
+
+                        <div class="col-xs-6 col-md-4 col-sm-4 col-lg-2 text-center">Сумма&nbsp;заявки <b><span id="fin_itog">0</span>р</span></b>
+                            <input type="hidden" id="finsumm30" value="0" />
+                            <input type="hidden" name="user_type" value="{if $now_price == 2 }сотрудник{else if $now_price == 1 }пайщик{else}гость{/if}" />
+                            {#
+                          {*
+                                                  {$rr = 1|rand:99999}
+                                                  <input type="hidden" name="id" value="{$rr}" />
+                                                  <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret($rr)}" />
+                          *}                        
+                          #}
+
+                            {# <input type="hidden" name="id" value="{Nyos\mod\myshop::$shop.id}" /> #}
+                            <input type="hidden" name="id" value="123" />
+                            {# <input type="hidden" name="s" value="{\Nyos\nyos::creatSecret(Nyos\mod\myshop::$shop.id)}" /> #}
+                            <input type="hidden" name="s" value="{{ creatSecret(123) }}" />
+                            {# {{ creatSecret(123) }} #}
+
+                        </div>
+                        <div class="col-xs-6 col-md-4 col-sm-4 col-lg-2 text-center ">
+                            <span id="ok_but_stat" ></span>
+                            <input id="ok_but" class="btn btn-success" name="suba" value="Отправить" style="display:none" type="submit" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='list_mag_ok' style="display:none;" >
+
+            <br/>
+            <br/>
+            <br/>
+
+            <center>
+
+                <h3>
+                    Заявка отправлена, спасибо!
+                    <br/>
+                    <br/>
+                    В ближайшее время ( с 10:00 - 18:00 ) позвоним
+                </h3>
+
                 <br/>
                 <br/>
-                В ближайшее время ( с 10:00 - 18:00 ) позвоним
-            </h3>
+                <br/>
+                <br/>
 
-            <br/>
-            <br/>
-            <br/>
-            <br/>
+            </center>
+        </div>
+        {#
+            {*f\pa(\Nyos\mod\myshop::$shop)*}
+            {*$items = Nyos\mod\myshop::getItems($db, \Nyos\mod\myshop::$shop['data']['id'], 'no-cat' )*}
+            {*$items = Nyos\mod\myshop::getItems($db, null, 'no-cat' )*}
+          #}  
 
-        </center>
-    </div>
+        <div class='row' style="background-color: #efefef; border-radius:10px; padding-top:10px; padding-bottom:10px;margin-bottom:20px;" id="row_filtr">
 
-    {*f\pa(\Nyos\mod\myshop::$shop)*}
-    {*$items = Nyos\mod\myshop::getItems($db, \Nyos\mod\myshop::$shop['data']['id'], 'no-cat' )*}
-    {*$items = Nyos\mod\myshop::getItems($db, null, 'no-cat' )*}
-    
+            <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-center' >
 
-    <div class='row' style="background-color: #efefef; border-radius:10px; padding-top:10px; padding-bottom:10px;margin-bottom:20px;" id="row_filtr">
+                Фильтр: <input type='text' class="form-control search_in" style='width:40%;display:inline-block;' >
+                <input id="clear" type="button" value="Очистить" class="btn btn-default" style="display:none;" />
 
-        <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-center' >
+                {# {literal} #}
+                <script type='text/javascript'>
 
-            Фильтр: <input type='text' class="form-control search_in" style='width:40%;display:inline-block;' >
-            <input id="clear" type="button" value="Очистить" class="btn btn-default" style="display:none;" />
-{literal}
-            <script type='text/javascript'>
+                    $().ready(function () {
 
-                $().ready(function () {
+                        // очистка поиска
+                        $('#clear').on('click', function () {
+                            $('input.search_in').val('');
+                            $('.list_mag .item').show();
+                            $(this).hide('slow');
+                        });
 
-                    // очистка поиска
-                    $('#clear').on('click', function () {
-                        $('input.search_in').val('');
-                        $('.list_mag .item').show();
-                        $(this).hide('slow');
-                    });
+                        // поиск по вводу в поле                        
+                        $('body .search_in').on('keyup input', function (e) {
 
-                    // поиск по вводу в поле                        
-                    $('body .search_in').on('keyup input', function (e) {
+                            $('#clear').show('slow');
 
-                        $('#clear').show('slow');
+                            var $this = $(this);
+                            var $filter = $this;
 
-                        var $this = $(this);
-                        var $filter = $this;
+                            $('.list_mag .item .name_item').each(function () {
 
-                        $('.list_mag .item .name_item').each(function () {
+                                var $th = $(this);
+                                var $r1 = $th.html().toLowerCase();
+                                var $r2 = $filter.val().toLowerCase();
+                                var $r3 = $r1.indexOf($r2);
 
-                            var $th = $(this);
-                            var $r1 = $th.html().toLowerCase();
-                            var $r2 = $filter.val().toLowerCase();
-                            var $r3 = $r1.indexOf($r2);
-
-                            // if( filter.val() != $(this).text().substr(0, filter.val().length) ) {
-                            if ($r3 != -1) {
-                                $(this).parent().show();
-                                //$(this).hide();
-                            } else {
-                                $(this).parent().hide();
-                                //$(this).hide();
-                            }
+                                // if( filter.val() != $(this).text().substr(0, filter.val().length) ) {
+                                if ($r3 != -1) {
+                                    $(this).parent().show();
+                                    //$(this).hide();
+                                } else {
+                                    $(this).parent().hide();
+                                    //$(this).hide();
+                                }
+                            });
                         });
                     });
-                });
-            </script>
-{/literal}
+                </script>
+                {# {/literal} #}
 
-        </div>
-        <div class='hidden-xs col-sm-6 col-md-6 col-lg-6 text-center' >
-            {if isset($datain_file_time) }
-            <p>Информация актуальна на {$datain_file_time}</p>
-            {/if}
-        </div>
-    </div>
-
-    <div class='list_head hidden-xs' style='border-bottom:1px solid gray;' >
-        <div class='row'>
-
-            <div class='col-xs-12 col-sm-6 col-md-4 col-lg-4 name'>
-                Наименование
             </div>
+            <div class='hidden-xs col-sm-6 col-md-6 col-lg-6 text-center' >
 
-            <div class='hidden-xs hidden-sm col-md-1 col-lg-1'>
-                Артикул
-            </div>
+                <p>Информация обновлена: {{ datain_file_time ?? '- - -' }}</p>
 
-            <div class='hidden-xs hidden-sm col-md-1 col-lg-1'>
-                Срок годности
-            </div>
-
-            <div class='hidden-xs hidden-sm col-md-1 col-lg-1 onsklad'>
-                На складе
-            </div>
-
-            <div class=' {if $now_price == 2 } col-xs-4 col-sm-2 col-md-2 {else} hidden-xs hidden-sm hidden-md {/if} col-lg-1 text-center'>
-                {if $now_price == 2 }<b>{/if}
-                    Цена для Пайщиков-Сотрудников
-                    {if $now_price == 2 }</b>{/if}
-            </div>
-
-            <div class=' {if $now_price == 1 } col-xs-4 col-sm-2 col-md-2 {else} hidden-xs hidden-sm hidden-md {/if} col-lg-1 text-center'>
-                {if $now_price == 1 }<b>{/if}
-                    Цена для Пайшиков-Потребителей
-                    {if $now_price == 1 }</b>{/if}
-            </div>
-
-            <div class='{if $now_price == 0 } col-xs-4 col-sm-2 col-md-2 {else} hidden-xs hidden-sm hidden-md {/if} col-lg-1 text-center'>
-                {if $now_price == 0 }<b>{/if}
-                    Цена
-                    {if $now_price == 0 }</b>{/if}
-            </div>
-
-            <div class='col-xs-7 col-sm-2 col-md-2 col-lg-2 text-center'>
             </div>
         </div>
-    </div>
 
-    {*\f\pa(Nyos\mod\myshop::$shop_id)*}
-    {*\f\pa(Nyos\mod\myshop::$items)*}
-    
-    <div class='list_mag' style="padding-bottom:70px;">
-        {foreach \Nyos\mod\myshop::$items as $k => $v }
+        <div class='list_head hidden-xs' style='border-bottom:1px solid gray;' >
+            <div class='row'>
 
-        {*foreach $datain as $k => $v *}
-        {*\f\pa($v)*}
+                <div class='col-xs-12 col-sm-6 col-md-4 col-lg-4 name'>
+                    Наименование
+                </div>
+
+                <div class='hidden-xs hidden-sm col-md-1 col-lg-1'>
+                    Артикул
+                </div>
+
+                <div class='hidden-xs hidden-sm col-md-1 col-lg-1'>
+                    Срок годности
+                </div>
+
+                <div class='hidden-xs hidden-sm col-md-1 col-lg-1 onsklad'>
+                    На складе
+                </div>
+
+                <div class=' {% if now_price == 2 %} col-xs-4 col-sm-2 col-md-2 {% else %} hidden-xs hidden-sm hidden-md {% endif %} col-lg-1 text-center'>
+                    {% if now_price == 2 %}<b>{% endif %}
+                        Цена для Пайщиков-Сотрудников
+                        {% if now_price == 2 %}</b>{%  endif %}
+                </div>
+
+                <div class=' {% if now_price == 1 %} col-xs-4 col-sm-2 col-md-2 {% else %} hidden-xs hidden-sm hidden-md {% endif %} col-lg-1 text-center'>
+                    {% if now_price == 1 %}<b>{% endif %}
+                        Цена для Пайшиков-Потребителей
+                        {% if now_price == 1 %}</b>{% endif %}
+                </div>
+
+                <div class='{% if now_price == 0 %} col-xs-4 col-sm-2 col-md-2 {% else %} hidden-xs hidden-sm hidden-md {% endif %} col-lg-1 text-center'>
+                    {% if now_price == 0 %}
+                        <b>
+                        {% endif %}
+                        Цена
+                        {% if now_price == 0 %}
+                        </b>
+                    {% endif %}
+                </div>
+
+                <div class='col-xs-7 col-sm-2 col-md-2 col-lg-2 text-center'>
+                </div>
+            </div>
+        </div>
+
+        {#
+        {*\f\pa(Nyos\mod\myshop::$shop_id)*}
+        {*\f\pa(Nyos\mod\myshop::$items)*}
+        #}
+
+        <div class='list_mag' style="padding-bottom:70px;">
+
+            {% for k,v in datain_items %}
+
+                {#
+                {*foreach $datain as $k => $v *}
+                #}
+
+                {# { pa(v) } #}
+
+                <div class='row item'>
+
+                    <div 
+                        class='col-xs-12 col-sm-6 col-md-3 col-lg-3 name_item {# if isset($v.opis3) && $v.opis3|count_characters:true > 0 } link_block {/if #}'
+                        {# if isset($v.opis3) && $v.opis3|count_characters:true > 0 } onclick="window.open('{$v.opis3}');" style="cursor:pointer;" {/if #} 
+                        >
+
+                        {{ v['Наименование'] ?? '' }}
+                        {{ v['Добавка'] ?? '' }}
+
+                        {% if v['ЕдИзм'] is defined %}
+                            {# if isset($v.ed_izm) && $v.ed_izm|count_characters:true > 0 } #}
+                            <span class="ed_iz" >{{ v['ЕдИзм'] }}</span>
+                        {% endif %}
+
+                        <br/>
+
+                        {% if v['СайтСделал'] is not null %} 
+                            <a href="{{ v['СайтСделал'] }}" target="_blank" >
+                                {{ v['СайтСделал']|replace({ 'https://':'','http://':'' }) }}
+                            </a>
+                        {% endif %}
+
+                        {#
+                        {*
+                        <br/>
+                        *}
         
-        <div class='row item'>
-            <div 
-                class='col-xs-12 col-sm-6 col-md-3 col-lg-3 name_item {if isset($v.opis3) && $v.opis3|count_characters:true > 0 } link_block {/if}'
-                {if isset($v.opis3) && $v.opis3|count_characters:true > 0 } onclick="window.open('{$v.opis3}');" style="cursor:pointer;" {/if} 
-                >
-
-                {$v.name} {$v.opis}
-
-                {if isset($v.ed_izm) && $v.ed_izm|count_characters:true > 0 }
-                <span class="ed_iz" >{$v.ed_izm}</span>
-                {/if}
-
-                <br/>
-
-                {if isset($v.opis3) && $v.opis3|count_characters:true > 0 }
-                <a href="{$v.opis3}" target="_blank" >{$v.opis3|replace:'https://':''|replace:'http://':''}</a>
-                {/if}
-
-                {*
-                <br/>
-                *}
-
-                {*/strip}
-                {$v.price}р -  {$v.price1}р -  {$v.price2}р - 
-                {strip*}
-
-                {*f\pa($v)*}
-                {*f\pa($v.dops)*}
+                        {*/strip}
+                        {$v.price}р -  {$v.price1}р -  {$v.price2}р - 
+                        {strip*}
+        
+                        {*f\pa($v)*}
+                        {*f\pa($v.dops)*}
+        #}
 
 
+                    </div>
 
-            </div>
+                    <div class='hidden-xs hidden-sm col-md-2 col-lg-2 text-right'>
+                        {% if v['КодТ'] is not empty %}
+                            {{ v['КодТ'] }}
+                        {% endif %}
+                    </div>
 
-            <div class='hidden-xs hidden-sm col-md-2 col-lg-2 text-right'>
-                {if isset($v.articul) && $v.articul|count_characters:true > 1 }
-                {$v.articul}
-                {/if}
-            </div>
+                    <div class='hidden-xs hidden-sm col-md-1 col-lg-1 text-right'>
+                        {#if isset($v.dops['СрокГод']) && $v.dops['СрокГод']|count_characters:true > 6 }
+                        {$v.dops['СрокГод']}
+                        {/if#}
+                        {% if v['СрокГод'] is not empty and v['СрокГод'] > 0 %}
+                            {{ v['СрокГод'] }}
+                        {% endif %}
+                    </div>
 
-            <div class='hidden-xs hidden-sm col-md-1 col-lg-1 text-right'>
-                {if isset($v.dops['СрокГод']) && $v.dops['СрокГод']|count_characters:true > 6 }
-                {$v.dops['СрокГод']}
-                {/if}
-            </div>
+                    <div class='hidden-xs hidden-sm col-md-1 col-lg-1 text-right'>
+                        {#if $v.onsklad > 0}{$v.onsklad}{/if#}
+                        {#% if v['Количество'] is not empty %#}
+                        {% if v['Количество'] is not empty and v['Количество'] > 0 %}
+                            {{ v['Количество'] }}
+                        {% endif %}
+                    </div>
 
-            <div class='hidden-xs hidden-sm col-md-1 col-lg-1 text-right'>
-                {if $v.onsklad > 0}{$v.onsklad}{/if}
-            </div>
 
-            <div class='{if $now_price == 2 } col-xs-4 col-sm-2 col-md-2{else} hidden-xs hidden-sm hidden-md {/if} col-lg-1 price text-right'>
-                {if $now_price == 2 }<b>{/if}
-                    {if $v.price > 0}{$v.price}р
-                    {$now_price1 = true}
-                    {/if}
-                {if $now_price == 2 }</b>
-                <input type="hidden" id="summ{$k}" value="{$v.price}" />
-                {$now_price_to_end = $v.price}
-                {/if}
-            </div>
 
-            <div class='{if $now_price == 1 } col-xs-4 col-sm-2 col-md-2{else} hidden-xs hidden-sm hidden-md {/if} col-lg-1 price text-right'>
-                {if $now_price == 1 }<b>{/if}
+
+                    {% set now_price_money = 0 %}
+
+                    {% if 1 == 2 %}
+                        <div class='{% if now_price == 2 %} col-xs-4 col-sm-2 col-md-2 {% else %} hidden-xs hidden-sm hidden-md {% endif %} col-lg-1 price text-right'>
+
+                            {% if now_price == 2 %}
+                                <b>
+                                {% endif %}
+                                {% if v['Цена1'] is not empty and v['Цена1'] > 0 %}
+                                    {{ v['Цена1'] }}
+                                {% endif %}
+                                {% if now_price == 2 %}
+                                </b>
+                                {% set now_price_money = v['Цена1'] %}
+                            {% endif %}
+
+                            {#
+                            {if $now_price == 2 }<b>{/if}
+                                {if $v.price > 0}{$v.price}р
+                                {$now_price1 = true}
+                                {/if}
+                                {if $now_price == 2 }</b>
+                            <input type="hidden" id="summ{{ k }}" value="{$v.price}" />
+                            {$now_price_to_end = $v.price}
+                            {/if}
+                            #}
+
+                        </div>
+
+                        <div class='{% if now_price == 1 %} col-xs-4 col-sm-2 col-md-2 {% else %} hidden-xs hidden-sm hidden-md {% endif %} col-lg-1 price text-right'>
+
+                            {% if now_price == 1 %}
+                                <b>
+                                {% endif %}
+                                {% if v['Цена2'] is not empty and v['Цена2'] > 0 %}
+                                    {{ v['Цена2'] }}
+                                {% endif %}
+                                {% if now_price == 1 %}
+                                </b>
+                                {% set now_price_money = v['Цена2'] %}
+                            {% endif %}
+
+                            {#
+                            {if $now_price == 1 }<b>{/if}
+        
+                                {if $v.price1 > 0}
+                                {$v.price1}р
+                                {else}
+                                -
+                                {/if}
+        
+                                {if $now_price == 1 }</b>
+                            <input type="hidden" id="summ{{ k }}" value="{$v.price1}" />
+                            {$now_price_to_end = $v.price1}
+                            {/if}
+                            #}
+
+                        </div>
+
+                    {% endif %}
+
+                    {% for i in 2..0 %}
+
+                        {% if i == 0 %}
+                            {% set i2 = 3 %}
+                        {% elseif i == 1 %}
+                            {% set i2 = 2 %}
+                        {% elseif i == 2 %}
+                            {% set i2 = 1 %}
+                        {% endif %}
+
+                        <div class='{% if now_price == i %} col-xs-4 col-sm-2 col-md-2 {% else %} hidden-xs hidden-sm hidden-md {% endif %} col-lg-1 price text-right'>
+
+                            {# {{ i }}/{{ i2 }} <br/> #}
+
+                            {% if v['Цена'~i2] is not empty and v['Цена'~i2] > 0 %}
+
+                                {% if now_price == i %}
+                                    <b>
+                                    {% endif %}
+                                    {{ v['Цена'~i2] }}
+                                    {% if now_price == i %}
+                                    </b>
+                                    {% set now_price_money = v['Цена'~i2] %}
+                                {% endif %}
+                            {% endif %}
+
+                        </div>
+                    {% endfor %}
+
+                    <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
+
+                        {# if $now_price == 0 && $v.price2 > 0 || $now_price == 1 && $v.price1 > 0 || $now_price == 2 && $v.price > 0 #}
+
+                        {% if now_price_money != 0 %} 
+
+                            <nobr>
+                                <span rel="{{ k }}" rev="{{ now_price_money }}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
+
+                                <input value="0" id="kolvo{{ k }}" class="kolvo" type="text"> 
+                                
+                                <input name="item[{{ k }}][price]" value="{{ now_price_money }}" type="hidden" />
+                                <input name="item[{{ k }}][name]" value="{{ v['Наименование']|e }} {{ v['Добавка']|e }}" type="hidden" />
+                                <input name="item[{{ k }}][kolvo]" value="0" id="kolvo2_{{ k }}" type="hidden" />
+
+                                <span rel="{{ k }}" rev="{{ now_price_money }}" alt="10000" class="plus2 btn btn-xs btn-success" value="+">+</span>
+
+                                <input xname="item[{{ k }}][summa]" value="0" class="summa_cifra" id="summa{{ k }}" type="hidden">
+                                <span class="summa" id="summa_show{{ k }}"></span>
+                            </nobr>
+
+                            {#if isset($v.dops['Заказ']) && $v.dops['Заказ'] > 1#}
+
+                            {% if v['Заказ'] is defined and v['Заказ'] > 1 %}
+                                <br clear="all" />
+                                <small style="color:gray;" >Минимальный заказ: {{ v['Заказ'] }}</small>
+                            {% endif %}
+
+                        {% endif %}
+
+
+                    </div>
+                    {#
+                                {if 1 == 2 }    
+                                {if isset($now_price2) && $now_price2 === true }    
                     
-                    {if $v.price1 > 0}
-                    {$v.price1}р
-                    {else}
-                    -
-                    {/if}
+                                <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
+                                    <nobr>
+                                        <span rel="{{ k }}" rev="{$now_price_to_end}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
                     
-                {if $now_price == 1 }</b>
-                <input type="hidden" id="summ{$k}" value="{$v.price1}" />
-                {$now_price_to_end = $v.price1}
-                {/if}
-            </div>
-
-
-            <div class='{if $now_price == 0 } col-xs-4 col-sm-2 col-md-2{else} hidden-xs hidden-sm hidden-md {/if} col-lg-1 price text-right'>
-
-                {if $now_price == 0 }
-                <b>
-                {/if}
+                                        <input value="0" id="kolvo{{ k }}" class="kolvo" type="text"> 
+                                        <input name="item[{{ k }}][kolvo]" value="0" id="kolvo2_{{ k }}" id="kolvo2" type="hidden" />
                     
-                    {if $v.price2 > 0}
-                    {$v.price2}р
-                    {else}
-                    -
-                    {/if}
+                                        <span rel="{{ k }}" rev="{$now_price_to_end}" alt="10000" class="plus2 btn btn-xs btn-success" value="+">+</span>
                     
-                {if $now_price == 0 }
-                </b>
-                <input type="hidden" id="summ{$k}" value="{$v.price2}" />
-                {$now_price_to_end = $v.price2}
-                {/if}
-
-            </div>
-
-
-            <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
-
-                
-                {if $now_price == 0 && $v.price2 > 0 || $now_price == 1 && $v.price1 > 0 || $now_price == 2 && $v.price > 0 } 
-                <nobr>
-                    <span rel="{$k}" rev="{$now_price_to_end}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
+                                        <input xname="item[{{ k }}][summa]" value="0" class="summa_cifra" id="summa{{ k }}" type="hidden">
+                                        <span class="summa" id="summa_show{{ k }}"></span>
+                                    </nobr>
+                                </div>
                     
-                    <input value="0" id="kolvo{$k}" class="kolvo" type="text"> 
-                    <input name="item[{$k}][kolvo]" value="0" id="kolvo2_{$k}" id="kolvo2" type="hidden" />
+                                {elseif isset($now_price1) && $now_price1 === true }    
                     
-                    <span rel="{$k}" rev="{$now_price_to_end}" alt="10000" class="plus2 btn btn-xs btn-success" value="+">+</span>
+                                <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
+                                    <nobr>
+                                        <span rel="{{ k }}" rev="{$v.price1}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
+                                        <input value="0" id="kolvo{{ k }}" class="kolvo" type="text"> 
+                                        <input name="item[{{ k }}][kolvo]" value="0" id="kolvo2_{{ k }}" id="kolvo2" type="hidden" />
+                                        <span rel="{{ k }}" rev="{$v.price1}" alt="10000" class="plus2 btn btn-xs btn-success" value="+">+</span>
+                                        <input xname="item[{{ k }}][summa]" value="0" class="summa_cifra" id="summa{{ k }}" type="hidden">
+                                        <span class="summa" id="summa_show{{ k }}"></span>
+                                    </nobr>
+                                </div>
                     
-                    <input xname="item[{$k}][summa]" value="0" class="summa_cifra" id="summa{$k}" type="hidden">
-                    <span class="summa" id="summa_show{$k}"></span>
-                </nobr>
-
-                    {if isset($v.dops['Заказ']) && $v.dops['Заказ'] > 1}
-                    <br clear="all" />
-                    <small style="color:gray;" >Минимальный заказ: {$v.dops['Заказ']}</small>
-                    {/if}
-                
-                {/if}
-
-                
-            </div>
-
-            {if 1 == 2 }    
-                {if isset($now_price2) && $now_price2 === true }    
-
-                <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
-                    <nobr>
-                        <span rel="{$k}" rev="{$now_price_to_end}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
-
-                        <input value="0" id="kolvo{$k}" class="kolvo" type="text"> 
-                        <input name="item[{$k}][kolvo]" value="0" id="kolvo2_{$k}" id="kolvo2" type="hidden" />
-
-                        <span rel="{$k}" rev="{$now_price_to_end}" alt="10000" class="plus2 btn btn-xs btn-success" value="+">+</span>
-
-                        <input xname="item[{$k}][summa]" value="0" class="summa_cifra" id="summa{$k}" type="hidden">
-                        <span class="summa" id="summa_show{$k}"></span>
-                    </nobr>
+                                {else}
+                    
+                                <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
+                    
+                                    {if isset($v) && isset($v.price2) && is_numeric($v.price2) && $v.price2 > 0}
+                                    <nobr>
+                                        <span rel="{{ k }}" rev="{$v.price}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
+                                        <input value="0" id="kolvo{{ k }}" class="kolvo" type="text"> 
+                                        <input name="item[{{ k }}][kolvo]" value="0" id="kolvo2_{{ k }}" id="kolvo2" type="hidden" />
+                                        <span rel="{{ k }}" rev="{$v.price}" alt="10000" class="plus2 btn btn-xs btn-success" {literal} value="+" {/literal} >+</span>
+                                        <input xname="item[{{ k }}][summa]" value="0" class="summa_cifra" id="summa{{ k }}" type="hidden">
+                                        <span class="summa" id="summa_show{{ k }}"></span>
+                                    </nobr>
+                                    {/if}
+                    
+                                </div>
+                    
+                                {/if}
+                                {/if}
+                    #}
                 </div>
 
-                {elseif isset($now_price1) && $now_price1 === true }    
-
-                <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
-                    <nobr>
-                        <span rel="{$k}" rev="{$v.price1}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
-                        <input value="0" id="kolvo{$k}" class="kolvo" type="text"> 
-                        <input name="item[{$k}][kolvo]" value="0" id="kolvo2_{$k}" id="kolvo2" type="hidden" />
-                        <span rel="{$k}" rev="{$v.price1}" alt="10000" class="plus2 btn btn-xs btn-success" value="+">+</span>
-                        <input xname="item[{$k}][summa]" value="0" class="summa_cifra" id="summa{$k}" type="hidden">
-                        <span class="summa" id="summa_show{$k}"></span>
-                    </nobr>
-                </div>
-
-                {else}
-
-                <div class='col-xs-4 col-sm-3 col-md-3 col-lg-2 but_bay'>
-
-                    {if isset($v) && isset($v.price2) && is_numeric($v.price2) && $v.price2 > 0}
-                    <nobr>
-                        <span rel="{$k}" rev="{$v.price}" alt="10000" class="minus2 btn btn-xs btn-warning" value="-">-</span> 
-                        <input value="0" id="kolvo{$k}" class="kolvo" type="text"> 
-                        <input name="item[{$k}][kolvo]" value="0" id="kolvo2_{$k}" id="kolvo2" type="hidden" />
-                        <span rel="{$k}" rev="{$v.price}" alt="10000" class="plus2 btn btn-xs btn-success" {literal} value="+" {/literal} >+</span>
-                        <input xname="item[{$k}][summa]" value="0" class="summa_cifra" id="summa{$k}" type="hidden">
-                        <span class="summa" id="summa_show{$k}"></span>
-                    </nobr>
-                    {/if}
-
-                </div>
-
-                {/if}
-            {/if}
+            {% endfor %}
 
         </div>
-        {/foreach}
-    </div>
 
 
-</form>
+    </form>
 
-{*f\pa($items,2)*}
+    {#
+    {*f\pa($items,2)*}
+    #}
 
-<script src="/js/numberformat.js"></script>
+    <script src="/js/numberformat.js"></script>
 
-<!-- {/strip} -->
+    <!-- {/strip} -->
+{% endspaceless %}

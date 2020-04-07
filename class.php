@@ -2,7 +2,7 @@
 
 namespace Nyos\mod;
 
-use f as f;
+// use f as f;
 
 //echo __FILE__.'<br/>';
 // строки безопасности
@@ -1085,7 +1085,8 @@ class myshop {
         }
 
         // кеш файл
-        self::$cash_file_items = dir_serv_site . 'shop.items.ar.tmp.json';
+        // self::$cash_file_items = dir_serv_site . 'shop.items.ar.tmp.json';
+        self::$cash_file_items = dir_site_module . 'shop.items.ar.tmp.json';
 
         // достаём инфу из кеш файла и в работу
         if (1 == 1 && file_exists(self::$cash_file_items)) {

@@ -15,8 +15,16 @@ if (isset($start_action) && $start_action == 'scan_new_datafile') {
 } else {
 
     date_default_timezone_set("Asia/Yekaterinburg");
-    define('IN_NYOS_PROJECT', true);
-    require_once( $_SERVER['DOCUMENT_ROOT'] . '/all/0.start.php' );
+    
+    // define('IN_NYOS_PROJECT', true);
+    // require_once( $_SERVER['DOCUMENT_ROOT'] . '/all/0.start.php' );
+    
+define('IN_NYOS_PROJECT', true);
+
+require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require( $_SERVER['DOCUMENT_ROOT'] . '/all/ajax.start.php' );
+    
+    
 }
 
 // echo '<pre>'; print_r($_REQUEST); echo '<pre>'; die();
@@ -70,15 +78,15 @@ if (isset($start_action) && $start_action == 'scan_new_datafile' || ( isset($_GE
 if (
         (
         isset($_REQUEST['id']{0}) && isset($_REQUEST['s']{5}) &&
-        Nyos\nyos::checkSecret($_REQUEST['s'], $_REQUEST['id']) === true
+        \Nyos\nyos::checkSecret($_REQUEST['s'], $_REQUEST['id']) === true
         ) || (
         isset($_REQUEST['show']{0}) &&
         isset($_REQUEST['id']{0}) && isset($_REQUEST['s']{5}) &&
-        Nyos\nyos::checkSecret($_REQUEST['s'], $_REQUEST['show'] . $_REQUEST['id']) === true
+        \Nyos\nyos::checkSecret($_REQUEST['s'], $_REQUEST['show'] . $_REQUEST['id']) === true
         ) || (
         isset($_REQUEST['action']{0}) &&
         isset($_REQUEST['id']{0}) && isset($_REQUEST['s']{5}) &&
-        Nyos\nyos::checkSecret($_REQUEST['s'], $_REQUEST['action'] . $_REQUEST['id']) === true
+        \Nyos\nyos::checkSecret($_REQUEST['s'], $_REQUEST['action'] . $_REQUEST['id']) === true
         )
 ) {
     
@@ -167,14 +175,20 @@ if (isset($_REQUEST['show']) && $_REQUEST['show'] == 'show_admin_option_cat') {
 //
 elseif (isset($_REQUEST['types']) && $_REQUEST['types'] == 'send_order') {
 
+    
+    
+    
     //require_once( $_SERVER['DOCUMENT_ROOT'] . '/0.site/exe/myshop/class.php');
-    require_once( $_SERVER['DOCUMENT_ROOT'] . '/module/myshop/class.php');
-    require_once( $_SERVER['DOCUMENT_ROOT'] . DS . 'include' . DS . 'f' . DS . 'txt.php' );
+
+//    require_once( $_SERVER['DOCUMENT_ROOT'] . '/vendor/didrive_mod/myshop/class.php');
+//    require_once( $_SERVER['DOCUMENT_ROOT'] . DS . 'include' . DS . 'f' . DS . 'txt.php' );
 
     Nyos\mod\myshop::getItems($db, $_REQUEST['id']);
     // f\pa(Nyos\mod\myshop::$items);
 
-    $vv['folder'] = Nyos\nyos::getFolder($db);
+    // $vv['folder'] = Nyos\nyos::getFolder($db);
+    $vv['folder'] = Nyos\nyos::getFolder();
+    // $vv['folder'] = Nyos\nyos::$folder_now;
 
     // $amnu = Nyos\nyos::get_menu($vv['folder']);
     \Nyos\Nyos::getMenu();
@@ -217,6 +231,14 @@ elseif (isset($_REQUEST['types']) && $_REQUEST['types'] == 'send_order') {
         // $emailer->ns_send('сайт ' . domain . ' > новое сообщение', str_replace($r1, $r2, $ctpl->tpl_files['bw.mail.body']));
         //$status = '';
 
+        $txt_telega = 'Отправлен заказ'
+                . PHP_EOL
+                . 'ФИО: ' . $_REQUEST['fio'] 
+                . PHP_EOL
+                . 'Тел: ' . $_REQUEST['phone']
+                .PHP_EOL
+                ;
+        
         $info = 'ФИО: ' . $_REQUEST['fio'] . ( isset($_REQUEST['user_type']{1}) ? ' (' . $_REQUEST['user_type'] . ')' : '' ) . '<br/>'
                 . 'Тел: ' . $_REQUEST['phone']
                 . '<br/>'
@@ -246,10 +268,21 @@ elseif (isset($_REQUEST['types']) && $_REQUEST['types'] == 'send_order') {
 
 //        echo '<pre>'; print_r(Nyos\mod\myshop::$items); echo '</pre>';
         
+        $sum_telega = 0;
+        
         foreach ($_REQUEST['item'] as $k => $v) {
+
+            if ( isset($v['kolvo']) && $v['kolvo'] > 0) {
+            $txt_telega .= PHP_EOL 
+                    . $v['name'] 
+                    . PHP_EOL 
+                    . $v['kolvo'] .' шт * '. $v['price'] .' р = '. ( $v['kolvo'] * $v['price'] )
+                    . PHP_EOL 
+                ;
+            $sum_telega += ( $v['kolvo'] * $v['price'] );
+            }
+
             if (isset(Nyos\mod\myshop::$items[$k]) && $v['kolvo'] > 0) {
-
-
 
                 if ($now_price == 2 && Nyos\mod\myshop::$items[$k]['price'] > 0) {
                     $price = Nyos\mod\myshop::$items[$k]['price'];
@@ -260,7 +293,6 @@ elseif (isset($_REQUEST['types']) && $_REQUEST['types'] == 'send_order') {
                 } else {
                     $price = 0;
                 }
-
 
                 $info .= '<tr>'
                         . '<td>' . Nyos\mod\myshop::$items[$k]['name'] . ( strlen(Nyos\mod\myshop::$items[$k]['opis']) < 150 ? '( ' . Nyos\mod\myshop::$items[$k]['opis'] . ' )' : '' ) . '</td>'
@@ -276,6 +308,8 @@ elseif (isset($_REQUEST['types']) && $_REQUEST['types'] == 'send_order') {
                         . ' | ' . ( isset($_SESSION['now_user']['soc_web_link']) ? $_SESSION['now_user']['soc_web_link'] : '' )
                         . ' | ' . $_REQUEST['user_type']
                         . ')";"' . $_REQUEST['phone'] . '";"' . Nyos\mod\myshop::$items[$k]['name'] . '";"' . Nyos\mod\myshop::$items[$k]['opis'] . '";"' . Nyos\mod\myshop::$items[$k]['articul'] . '";' . $v['kolvo'] . ';;' . $price . ';' . ( $price * $v['kolvo']) . ';' . PHP_EOL;
+                
+
             }
         }
 
@@ -288,7 +322,16 @@ elseif (isset($_REQUEST['types']) && $_REQUEST['types'] == 'send_order') {
 
     // echo $cfg['mail_for_order'];
 
-    require_once( $_SERVER['DOCUMENT_ROOT'] . '/include/mail.php' );
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    // require_once( $_SERVER['DOCUMENT_ROOT'] . '/include/mail.php' );
     
     if ( class_exists('Nyos\mod\mailpost')) {
         Nyos\mod\mailpost::addNewFile('zakaz_' . date('Y-m-d-h-i-s', $_SERVER['REQUEST_TIME']) . '.csv', iconv('utf-8', 'windows-1251', 'НомерДокП;Заказчик;Телефон;Наименование;Добавка;КодТ;Количество;Упаковок;Цена;Сумма' . PHP_EOL
@@ -330,6 +373,8 @@ elseif (isset($_REQUEST['types']) && $_REQUEST['types'] == 'send_order') {
     //Nyos\mod\mailpost::sendNow($db, 'support@uralweb.info', 'support-shop@uralweb.info', 'Заказ в интернет магазине ' . ( isset($cfg['name_shop']) ? $cfg['name_shop'] : $_SERVER['HTTP_HOST'] ), 'nexit_myshop', array('text' => $info));
     //echo $status;
 
+    \nyos\Msg::sendTelegramm( $txt_telega . PHP_EOL . 'Итого: '.number_format($sum_telega , 2 , '.','`').' руб', null, 2 );
+    
     \f\end2('Заявка отправлена, в ближайшее время позвоним уточнить заказ');
     }
 

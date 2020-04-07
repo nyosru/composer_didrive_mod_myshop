@@ -1,5 +1,7 @@
 $(document).ready(function () { // вся мaгия пoслe зaгрузки стрaницы
 
+// alert('123');
+
     if ($('select').is('#change_price')) {
 
 // при загрузке ставим ту цену которая выбрана
@@ -99,10 +101,6 @@ $(document).ready(function () { // вся мaгия пoслe зaгрузки с�
         });
 
     }
-
-
-
-
 
     /*
      var $refresh_itogo = function ()
@@ -384,6 +382,13 @@ $(document).ready(function () { // вся мaгия пoслe зaгрузки с�
         refreshCart($('#shop_id').val());
     });
 
+
+
+
+
+/**
+ * отключил 200406
+ */
     // обновление надписи на корзине на верху
     var refreshCart = function ($shop) {
 
@@ -457,8 +462,17 @@ $(document).ready(function () { // вся мaгия пoслe зaгрузки с�
         return false;
 
     };
+    //refreshCart($('#shop_id').val());
+    
+    
 
-    refreshCart($('#shop_id').val());
+
+
+
+
+
+
+
 
 // добавляем товар в корзину, убираем от туда
     $('body .myshop_btn').on('click', function (event) {
@@ -517,7 +531,8 @@ $(document).ready(function () { // вся мaгия пoслe зaгрузки с�
 
         $.ajax({
 
-            url: "/module/myshop/2/ajax.web.php",
+            /* url: "/module/myshop/2/ajax.web.php", */
+            url: "/vendor/didrive_mod/myshop/2/ajax.web.php",
             data: "type=" + $action + "&id=" + $id + "&price="+ $price_now +"&price_opt=" + $price_now_opt + "&s=" + $s + '&' + $ar.join("&"),
             cache: false,
             dataType: "json",
@@ -572,7 +587,7 @@ $(document).ready(function () { // вся мaгия пoслe зaгрузки с�
 
         $.ajax({
 
-            url: "/module/myshop/2/ajax.php",
+            url: "/vendor/didrive_mod/myshop/2/ajax.php",
             data: "types=send_order&" + $data,
             cache: false,
             dataType: "json",
