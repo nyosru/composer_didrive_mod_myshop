@@ -5,7 +5,7 @@
 
 if(file_exists( DR. dir_site_module_nowlev.'data.json.ar' ) )
 {
-    $vv['datain_file_time'] = date( 'd.m.Y', filemtime( DR. dir_site_module_nowlev.'data.json.ar' ) );
+    $vv['datain_file_time'] = date( 'H:i d.m.Y', filemtime( DR. dir_site_module_nowlev.'data.json.ar' ) );
     $vv['datain_items'] = json_decode(file_get_contents( DR. dir_site_module_nowlev.'data.json.ar' ), true );
     // \f\pa($data);
 }
